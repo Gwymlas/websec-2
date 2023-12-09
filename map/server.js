@@ -10,7 +10,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-let stopData = {};
+let stopData = [];
+let stopDataMap = new Map();
 
 const getStopData = async () => {
     axios.get('https://tosamara.ru/api/v2/classifiers/stopsFullDB.xml', 
@@ -25,6 +26,9 @@ const getStopData = async () => {
                 // console.log(tag.name(), tag.text()
                 // console.log(obj);
                 busStopsValue.push(obj);
+                stopDataMap.set(obj.KS_ID, obj);
+                // console.log(obj);
+                
             });
 
             stopData = {busStopsValue};
@@ -55,24 +59,30 @@ const getTransportPosition = async (hullno) => {
     let authkey = sha1(hullno + "just_f0r_tests");
     let url = `https://tosamara.ru/api/v2/json?method=getTransportPosition&HULLNO=${hullno}&os=android&clientid=test&authkey=${authkey}`;
     const data = await axios.get(url).then(response => response.data);
-    let result = {"nextStops": data["nextStops"],
-                  "longitude": data["longitude"],
-                  "latitude": data["latitude"]
-                }
-    return result;
+
+    let nextStops = []
+    if (data["nextStops"]) {
+        data["nextStops"].forEach(arrival => {
+            let obj = {};
+            let stop = stopDataMap.get(arrival["KS_ID"])
+            obj["KS_ID"] = arrival["KS_ID"]
+            obj["time"] = arrival["time"]
+            obj["title"] = stop["title"]
+            obj["adjacentStreet"] = stop["adjacentStreet"]
+            obj["direction"] = stop["direction"]
+            nextStops.push(obj);
+        })
+    }
+    
+    return {nextStops};
 }
 
 
-const getStopById = async (id) => {
+const getStopById = (id) => {
     let result = {};
 
-
-    if (Object.keys(stopData).length !== 0) {
-        stopData["busStopsValue"].forEach(stop => {
-                if (stop["KS_ID"] === id) {
-                    result = stop;
-                }
-            });
+    if (stopDataMap.has(id)) {
+        result = stopDataMap.get(id);
     }
     
     return result;
@@ -117,7 +127,7 @@ app.get('/getTransportPosition', (req, res) => {
 
 app.get('/getStopById', (req, res) => {
     const ks_id = req.query.KS_ID;
-    getStopById(ks_id).then(result => res.send(result));
+    res.send(getStopById(ks_id));
 })
 
 

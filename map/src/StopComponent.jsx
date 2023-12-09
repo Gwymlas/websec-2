@@ -1,34 +1,39 @@
 import React from "react";
+import { useNavigate } from 'react-router-dom';
+
 // import InfoComponent from "./InfoComponent";
 
-import {Marker, Popup, useMap } from 'react-leaflet';
+import { Marker, Popup } from 'react-leaflet';
 
 
-function StopComponent({stop, handleShowInfo, handleStopSelect}) {
+function StopComponent({stop, handleStopSelect, addFavouriteStop}) {
 
-    const map = useMap();
+  const  navigate = useNavigate();
     
-    return (
-        <Marker key={stop.KS_ID} position={[parseFloat(stop.latitude), parseFloat(stop.longitude)]}>
-          <Popup>
-          <div>
-            {/* <p>{stop.title}</p> */}
-            <div  onClick={() => console.log(stop.title)}>
-              {stop.title}
-            </div>
-            <button onClick={() => {
-              handleShowInfo(true);
-              handleStopSelect(stop);
-              }}>
-                Подробнее
-            </button>
+  return (
+      <Marker key={stop.KS_ID} position={[parseFloat(stop.latitude), parseFloat(stop.longitude)]}>
+        <Popup>
+        <div>
+          
+          <div  onClick={() => console.log(stop.title)}>
+            {stop.title}
           </div>
-          </Popup>
+          <button onClick={() => {
+            handleStopSelect(stop);
+            navigate("/info");
+            }}>
+              Подробнее
+          </button>
+          <button onClick={()=> addFavouriteStop(stop)}>
+            Добавить в избранное
+          </button>
+        </div>
+        </Popup>
 
-        </Marker>
+      </Marker>
 
-        
-    );
+      
+  );
 }
 
 export default StopComponent

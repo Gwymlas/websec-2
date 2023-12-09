@@ -9,7 +9,6 @@ import StopComponent from './StopComponent.jsx';
 
 const center = [53.2, 50.15];
 
-
 function ResetCenterView({ selectedStop }) {
   const map = useMap();
 
@@ -42,7 +41,7 @@ function ResetCenterView({ selectedStop }) {
 }
 
 
-const MapComponent = ( { stops, showInfo, handleShowInfo, handleStopSelect, selectedStop } ) => {
+const MapComponent = ( { stops, handleStopSelect, selectedStop, addFavouriteStop } ) => {
 
   return (
       <MapContainer 
@@ -59,8 +58,8 @@ const MapComponent = ( { stops, showInfo, handleShowInfo, handleStopSelect, sele
           { stops.map(stop => (
           < StopComponent key={stop.KS_ID} 
                           stop={stop}
-                          handleStopSelect = {handleStopSelect} 
-                          handleShowInfo={handleShowInfo}/>
+                          handleStopSelect = {handleStopSelect}
+                          addFavouriteStop = {addFavouriteStop}/>
           )) }
 
         <ResetCenterView selectedStop={selectedStop}/>
