@@ -5,12 +5,23 @@ import { useNavigate } from 'react-router-dom';
 const FavouriteStopsComponent = ({favouriteStops, removeFavouriteStop, handleStopSelect}) => {
     const  navigate = useNavigate();
 
+    if (favouriteStops.length === 0) {
+        return (
+            <div className="d-flex justify-content-center align-items-center">
+                <h3>
+                    Список пуст
+                </h3>
+            </div>
+        )
+    }
 
     return (
         <ListGroup>
             {favouriteStops && favouriteStops.map(stop => {
                 return (
-                    <ListGroup.Item key={stop["KS_ID"]}>
+                    <ListGroup.Item 
+                        className="d-flex justify-content-center align-items-center"
+                        key={stop["KS_ID"]}>
                         {stop["title"]}
 
                         <Button 

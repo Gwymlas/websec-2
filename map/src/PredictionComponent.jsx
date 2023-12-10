@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 
 const PredictionForTransport = ({onHide, show, transport_id}) => {
@@ -37,18 +38,21 @@ const PredictionForTransport = ({onHide, show, transport_id}) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <ListGroup>
           
-          {predictions && predictions.map(prediction => {
-            return (
-            <div key={parseInt(prediction["KS_ID"])}>
-                <p>Название остановки: {prediction["title"]} </p>
-                <p>Время до прибытия: 
-                {parseInt(prediction["time"]) / 60 > 0 ? parseInt(prediction["time"] / 60) + " мин " : ""}
-                {parseInt(prediction["time"] % 60) + " сек" }</p>
-            </div>
-            )
-          })}
-          
+              {predictions && predictions.map(prediction => {
+                return (
+                  <ListGroup.Item key={parseInt(prediction["KS_ID"])}>
+                    <p>Название остановки: {prediction["title"]} </p>
+                    <p>Время до прибытия: 
+                    {parseInt(prediction["time"]) / 60 > 0 ? " " + parseInt(prediction["time"] / 60) + " мин " : " "}
+                    {parseInt(prediction["time"] % 60) + " сек" }</p>
+                  </ListGroup.Item>
+                )
+              })}
+            
+          </ListGroup>
+
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={onHide}>Close</Button>

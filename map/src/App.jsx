@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+
+import { LinkContainer } from "react-router-bootstrap";
+
+
 import MapComponent from "./MapComponent"
 import SearchComponent from "./SearchComponent";
 import InfoComponent from "./InfoComponent";
@@ -21,10 +27,6 @@ function App() {
     console.log("initialValue" + initialValue);
     return initialValue || [];
   });
-
-  // useEffect(() => {
-  //   localStorage.setItem("favouriteStops", JSON.stringify(favouriteStops));
-  // }, [favouriteStops]);
 
   useEffect(() => { async function loadData() {
     const response = await axios("http://localhost:5005/getStopsCoord");
@@ -49,31 +51,44 @@ function App() {
 
   const removeFavouriteStop = (stop) => {
     let filtered = favouriteStops.filter(favStop => favStop["KS_ID"] !== stop["KS_ID"]);
-    // console.log("filtered", filtered);
     setFavouriteStops(filtered);
-    // console.log(favouriteStops);
     localStorage.setItem("favouriteStops", JSON.stringify(filtered));
-    // console.log(favouriteStops);
 };
 
 
   if (loading) return <div>Loading...</div>;
 
   return (
-    <>
-      <div>
-        <Link to="/map"> Карта </Link>
-        <Link to="/search"> Поиск </Link>
-        <Link to="/favourite"> Избранное </Link>
-      </div>
-       
+    <>  
+
+      <Navbar collapseOnSelect bg="light" expand="md" className="mb-3 px-3">
+        <LinkContainer to="/">
+          <Navbar.Brand className="fw-bold text-muted">Прибывалка</Navbar.Brand>
+        </LinkContainer>
+        <Navbar.Toggle />
+        <Navbar.Collapse className="justify-content-end">
+          <Nav activeKey={window.location.pathname}>
+            <LinkContainer to="/map">
+              <Nav.Link>Карта</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/search">
+              <Nav.Link>Поиск</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/favourite">
+              <Nav.Link>Избранное</Nav.Link>
+            </LinkContainer>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
 
       <Routes>
+
         <Route path="/map" element= { < MapComponent stops={stops}
                                                   favouriteStops={favouriteStops}
                                                   handleStopSelect={handleStopSelect}
                                                   addFavouriteStop={addFavouriteStop}
                                                   selectedStop={selectedStop}/>} />
+            
         
         <Route path="/search" element= {  <SearchComponent stops={stops} 
                                                           favouriteStops={favouriteStops}

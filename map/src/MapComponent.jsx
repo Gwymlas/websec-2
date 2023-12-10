@@ -48,7 +48,7 @@ const MapComponent = ( { stops, handleStopSelect, selectedStop, addFavouriteStop
         center={center} 
         zoom={14} 
         
-        style={{ height: '100vh', width: '100%' }}
+        style={{ height: '90vh', width: '100%' }}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

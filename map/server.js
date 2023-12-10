@@ -96,6 +96,7 @@ const getStopsCoord = () => {
     stopData["busStopsValue"].forEach(stop => {
         let obj = { "KS_ID": stop["KS_ID"],
                     "title": stop["title"],
+                    "direction": stop["direction"],
                     "latitude": stop["latitude"],
                     "longitude": stop["longitude"] };
         stops.push(obj);
